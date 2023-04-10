@@ -20,7 +20,7 @@ npm install --save tspathrr
 
 ```typescript
 const files = await Pathrr.resolve(['./lib/model/User.ts'], __dirname);
-console.error(files); // ['<cwd>/<path to pre-compiled file>/lib/model/']User.ts
+console.error(files); // ['<cwd>/<path to source-file>/lib/model/User.ts']
 ```
 
 ## License
