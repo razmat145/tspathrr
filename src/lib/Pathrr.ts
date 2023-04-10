@@ -6,9 +6,9 @@ import TsConfig from './TsConfig';
 
 class Pathrr {
 
-    public async resolve(filePaths: Array<string>, callerDir: string): Promise<Array<string>> {
+    public async resolve(filePaths: Array<string>, callerDir: string, reuse = false): Promise<Array<string>> {
 
-        await TsConfig.read();
+        await TsConfig.read(reuse);
 
         const resolvedPaths = [];
         for (const file of filePaths) {

@@ -6,24 +6,21 @@ import path from 'path';
 
 import { Pathrr } from '../src/index';
 
+
 const mockedReadFile = jest.spyOn(afs, 'readFile');
-const mockedCwd = jest.spyOn(process, 'cwd');
 
 describe('Pathrr', () => {
 
     const mockFile = './database/model/User.ts';
-    const mockCwd = '/dev/my-project';
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
     it('should return the absolute ts source file path based on outDir and rootDir', async () => {
-        const mockSrcDir = '/dev/my-project/src/lib';
+        const mockDistCallerDir = path.join(process.cwd(), '/dist/lib');
+        const mockActualSrcCallerDir = path.join(process.cwd(), '/src/lib');
 
-        const sutResult = await Pathrr.resolve([mockFile], mockSrcDir);
-
-        mockedCwd.mockReturnValue(mockCwd);
         mockedReadFile.mockResolvedValue(
             JSON.stringify({
                 compilerOptions: {
@@ -33,17 +30,19 @@ describe('Pathrr', () => {
             })
         );
 
+        const sutResult = await Pathrr.resolve([mockFile], mockDistCallerDir);
+
+        expect(mockedReadFile).toHaveBeenCalled();
+
         expect(sutResult).toEqual([
-            path.join(mockSrcDir, mockFile)
+            path.join(mockActualSrcCallerDir, mockFile)
         ]);
     });
 
     it('should return the absolute ts source file path based on outDir', async () => {
-        const mockSrcDir = '/dev/my-project/lib';
+        const mockDistCallerDir = path.join(process.cwd(), '/dist/lib');
+        const mockActualSrcCallerDir = path.join(process.cwd(), '/lib');
 
-        const sutResult = await Pathrr.resolve([mockFile], mockSrcDir);
-
-        mockedCwd.mockReturnValue(mockCwd);
         mockedReadFile.mockResolvedValue(
             JSON.stringify({
                 compilerOptions: {
@@ -52,17 +51,19 @@ describe('Pathrr', () => {
             })
         );
 
+        const sutResult = await Pathrr.resolve([mockFile], mockDistCallerDir);
+
+        expect(mockedReadFile).toHaveBeenCalled();
+
         expect(sutResult).toEqual([
-            path.join(mockSrcDir, mockFile)
+            path.join(mockActualSrcCallerDir, mockFile)
         ]);
     });
 
     it('should return the absolute ts source file path based on rootDir', async () => {
-        const mockSrcDir = '/dev/my-project/src/lib';
+        const mockDistCallerDir = path.join(process.cwd(), '/lib');
+        const mockActualSrcCallerDir = path.join(process.cwd(), '/src/lib');
 
-        const sutResult = await Pathrr.resolve([mockFile], mockSrcDir);
-
-        mockedCwd.mockReturnValue(mockCwd);
         mockedReadFile.mockResolvedValue(
             JSON.stringify({
                 compilerOptions: {
@@ -71,26 +72,49 @@ describe('Pathrr', () => {
             })
         );
 
+        const sutResult = await Pathrr.resolve([mockFile], mockDistCallerDir);
+
+        expect(mockedReadFile).toHaveBeenCalled();
+
         expect(sutResult).toEqual([
-            path.join(mockSrcDir, mockFile)
+            path.join(mockActualSrcCallerDir, mockFile)
         ]);
     });
 
     it('should return the absolute ts source file path based on no ts dirs specified', async () => {
-        const mockSrcDir = '/dev/my-project/';
+        const mockDistCallerDir = path.join(process.cwd(), '/lib');
 
-        const sutResult = await Pathrr.resolve([mockFile], mockSrcDir);
-
-        mockedCwd.mockReturnValue(mockCwd);
         mockedReadFile.mockResolvedValue(
             JSON.stringify({
                 compilerOptions: {}
             })
         );
 
+        const sutResult = await Pathrr.resolve([mockFile], mockDistCallerDir);
+
+        expect(mockedReadFile).toHaveBeenCalled();
+
         expect(sutResult).toEqual([
-            path.join(mockSrcDir, mockFile)
+            path.join(mockDistCallerDir, mockFile)
         ]);
+    });
+
+    it('should read the tsconfig twice if reuse flag is passed', async () => {
+        const mockDistCallerDir = path.join(process.cwd(), '/lib');
+
+        mockedReadFile.mockResolvedValue(
+            JSON.stringify({
+                compilerOptions: {}
+            })
+        );
+
+        await Pathrr.resolve([mockFile], mockDistCallerDir, true);
+
+        expect(mockedReadFile).toHaveBeenCalledTimes(1);
+
+        await Pathrr.resolve([mockFile], mockDistCallerDir, true);
+
+        expect(mockedReadFile).toHaveBeenCalledTimes(1);
     });
 
 });
