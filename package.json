@@ -1,6 +1,6 @@
 {
   "name": "tspathrr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Typescript Source File Pathing",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,6 +21,10 @@
   "pre-commit": [
     "lint"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/razmat145/tspathrr"
+  },
   "author": "Razvan Matei (monakyo@gmail.com)",
   "license": "Apache-2.0",
   "devDependencies": {
