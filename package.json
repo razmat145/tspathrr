@@ -1,0 +1,37 @@
+{
+  "name": "tspathrr",
+  "version": "0.0.1",
+  "description": "Typescript Source File Pathing",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "compile": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "clean": "rimraf dist/",
+    "build": "npm run clean && npm run compile",
+    "test": "jest"
+  },
+  "keywords": [
+    "typescript",
+    "node",
+    "path",
+    "type source file path"
+  ],
+  "pre-commit": [
+    "lint"
+  ],
+  "author": "Razvan Matei (monakyo@gmail.com)",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@jest/globals": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.38.0",
+    "jest": "^29.5.0",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  }
+}
