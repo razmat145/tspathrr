@@ -20,7 +20,32 @@ class TsConfig {
 
     private sourcePath: string;
 
-    public async read() {
+    private loadedConfig: string;
+
+    public async read(reuse = false) {
+        const tsConfig = await this.getConfigFile(reuse);
+
+        this.applyPaths(this.stripParse(tsConfig));
+    }
+
+    public getBuildPath() {
+        return this.buildPath;
+    }
+
+    private async getConfigFile(reuse = false) {
+        if (reuse) {
+            if (this.loadedConfig) {
+                return this.loadedConfig;
+            } else {
+                this.loadedConfig = await this.loadConfigFile();
+                return this.loadedConfig;
+            }
+        } else {
+            return this.loadConfigFile();
+        }
+    }
+
+    private async loadConfigFile() {
         const tsConfigPath = path.normalize(path.join(this.cwd, 'tsconfig.json'));
 
         let tsConfig;
@@ -29,12 +54,7 @@ class TsConfig {
         } catch (err) {
             throw new Error(`Error while reading base tsconfig at path: ${tsConfigPath}; with message: ${err.message}`);
         }
-
-        this.applyPaths(this.stripParse(tsConfig));
-    }
-
-    public getBuildPath() {
-        return this.buildPath;
+        return tsConfig;
     }
 
     public getSourcePath() {
