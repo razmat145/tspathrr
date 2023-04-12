@@ -1,6 +1,6 @@
 {
   "name": "tspathrr",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Typescript Source File Pathing",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix .",
     "clean": "rimraf dist/",
     "build": "npm run clean && npm run compile",
-    "test": "jest"
+    "test": "jest --collectCoverage"
   },
   "keywords": [
     "typescript",
